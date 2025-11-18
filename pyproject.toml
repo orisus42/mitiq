@@ -21,6 +21,7 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Compilers",
+    "Topic :: Scientific/Engineering :: Quantum Computing",
     "Typing :: Typed",
 ]
 dependencies = [
