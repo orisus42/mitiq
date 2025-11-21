@@ -19,7 +19,6 @@ classifiers = [
     "Operating System :: MacOS",
     "Operating System :: POSIX :: Linux",
     "Operating System :: Microsoft :: Windows",
-    "Topic :: Scientific/Engineering",
     "Topic :: Software Development :: Compilers",
     "Topic :: Scientific/Engineering :: Quantum Computing",
     "Typing :: Typed",
