@@ -81,6 +81,11 @@ def convert_to_mitiq(circuit: QPROGRAM) -> tuple[cirq.Circuit, str]:
     """
     conversion_function: Callable[[Any], cirq.Circuit]
 
+    if isinstance(circuit, str) and hasattr(circuit, "__module__") is False:
+        from mitiq.typing import QasmStringType
+
+        circuit = QasmStringType(circuit)
+
     try:
         package = circuit.__module__
     except AttributeError:
@@ -114,6 +119,12 @@ def convert_to_mitiq(circuit: QPROGRAM) -> tuple[cirq.Circuit, str]:
         input_circuit_type = "qibo"
         conversion_function = from_qibo
 
+    elif "openqasm3.ast" in package:
+        from mitiq.interface.mitiq_openqasm.conversions import from_openqasm
+
+        input_circuit_type = "openqasm"
+        conversion_function = from_openqasm
+
     elif package in TO_MITIQ_DICT:
         input_circuit_type = package
         conversion_function = TO_MITIQ_DICT[package]
@@ -133,7 +144,7 @@ def convert_to_mitiq(circuit: QPROGRAM) -> tuple[cirq.Circuit, str]:
         )
 
     try:
-        mitiq_circuit = conversion_function(circuit)
+        mitiq_circuit = conversion_function(circuit)  # type: ignore
     except Exception:
         raise CircuitConversionError(
             "Circuit could not be converted to an internal Mitiq circuit. "
@@ -187,6 +198,11 @@ def convert_from_mitiq(
 
         def conversion_function(circ: cirq.Circuit) -> cirq.Circuit:
             return circ
+
+    elif conversion_type == "openqasm":
+        from mitiq.interface.mitiq_openqasm.conversions import to_openqasm
+
+        conversion_function = to_openqasm
 
     else:
         raise UnsupportedCircuitError(
